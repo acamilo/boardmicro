@@ -1332,7 +1332,9 @@ function loop() {
     if (207 == h && 255 == d || e) {
       b = !1, e ? (forceBreak = !1, isPaused = !0, handleBreakpoint((PC - 2).toString(16).toUpperCase())) : isNative() && Android.endProgram(), isNode() && console.log("Exit " + ((r[25] << 8) + r[24]));
     }
+    
     fetch(h, d);
+    updateUIwithProcState();
     for (i = 0;5 > i;i++) {
       switch(i) {
         case 0:
@@ -1362,7 +1364,7 @@ function loop() {
   var mhz = (batchSize/(end-start))/1000;
   reportMhz(mhz);
   flushPixelBuffer();
-  b && setTimeout(loop, batchDelay);
+  //b && setTimeout(loop, batchDelay);
 }
 function engineInit() {
   timedInstructions = 0;

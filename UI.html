@@ -6,7 +6,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 
->
+
   
   <!-- Site Properities -->
   <title>AVR Sim UI</title>
@@ -17,22 +17,81 @@
   <script src="http://cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.js"></script>
   <script src="dist/semantic.js"></script>
   
-    	<script src="js/jquery-linedtextarea.js"></script>
-	<link href="style/jquery-linedtextarea.css" type="text/css" rel="stylesheet" >
+  <script src="js/jquery-linedtextarea.js"></script>
+  <link href="style/jquery-linedtextarea.css" type="text/css" rel="stylesheet" >
 	
-	<script type="text/javascript" src="js/jquery.colorfy.js"></script>
+  <script type="text/javascript" src="js/jquery.colorfy.js"></script>
+	
+		<script type="text/javascript" src="js/avrcore.js"></script>
+				<script type="text/javascript" src="js/newui.js"></script>
+				<script type="text/javascript" src="js/mutation-summary.js"></script>
 </head>
 <body id="sink">
 
 <div class="demo container">
+<!--
 <div class="ui segment" style="min-height: 8rem;">
   <div class="ui top attached label">Top Labeled</div>
 <h3> foo </h3>
 </div>
+-->
 <div class="ui grid">
-<div class="three column row">
-    <div class="column">
-	<table class="ui compact celled table">
+<div class="seven wide column">
+
+<table class="ui compact celled table">
+	<thead>
+		<tr><th colspan="2">Program</th></tr>
+	</thead>
+	<tbody>
+	        <tr>
+			<td class="collapsing positive">PC</td>
+			<td id="ui-PC">0xFFFF</td>
+			</tr>
+			<tr>
+				<td colspan="2">
+                    <div class="codebox">
+                    <div class="codeitem assembly" contenteditable id="ui-code-assembly">a</div>
+                        <div class="codeitem addresses" id="ui-code-addresses">0000<br>0002<br>0004<br>0008<br>000A<br>000C<br>000E<br>0010<br>0012<br>0014<br>0018<br>001a<br>
+                        </div>
+                        
+                        <div class="codeitem instructions" contenteditable id="ui-code-instructions">
+                        06 e4<br>10 2f<br>07 e4<br>00 00<br>00 00<br>00 00<br>00 00<br>00 00<br>00 00<br>00 00<br>00 00<br>00 00<br><br>
+                        </div>
+                    </div>
+				</td>
+			</tr>
+	</tbody>
+	 <tfoot class="full-width">
+	    <tr>
+	        <th colspan="2" class="center aligned">
+	        <div class="ui icon buttons tiny">
+  <div class="ui button red " onClick="runButton();" id="ui-run">
+    <i class="play icon"></i>
+    Run
+  </div>
+  <div class="ui button"  onClick="pauseButton();">
+    <i class="pause icon"></i>
+    Pause
+  </div>
+    <div class="ui button"  onClick="singleStepButton();">
+    <i class="share icon"></i>
+    Single Step
+  </div>
+  <div class="ui button" onClick="resetButton();">
+    <i class="stop icon"></i>
+    Reset
+  </div>
+</div>
+
+
+
+</th>
+	 </tfoot>
+</table>
+</div>
+<div class="four wide column">
+
+<table class="ui compact celled table" id="stack">
   <thead>
     <tr>
 		<th colspan="3" class="positive">
@@ -42,74 +101,33 @@
   </thead>
     <tbody>
 		<tr>
-			<td class="collapsing positive">Stack Pointer</td>
-			<td>0xFF</td>
-			<td>0xFF</td>
+			<td class="collapsing positive">SP</td>
+			<td id="ui-SPH">0xFF</td>
+			<td id="ui-SPL">0xFF</td>
 		</tr>
 		<tr>
-			<td class="negative">0000</td>
-			<td colspan="2">0x00</td>
+			<td colspan="3">
+			<textarea class="editor lined" id="ui-stack">00
+00
+00
+00</textarea>
+			</td>
 		<tr>
-		<tr>
-			<td class="negative">0000</td>
-			<td colspan="2">0x00</td>
-		<tr>
-		<tr>
-			<td class="negative">0000</td>
-			<td colspan="2">0x00</td>
-		<tr>
-		<tr>
-			<td class="negative">0000</td>
-			<td colspan="2">0x00</td>
-		<tr>
-		<tr>
-			<td class="negative">0000</td>
-			<td colspan="2">0x00</td>
-		<tr>
-		<tr>
-			<td class="negative">0000</td>
-			<td colspan="2">0x00</td>
-		<tr>
-		
 		
 	</tbody>
 </table>
-	
-	
-	</div>
-    <div class="column">
-	
-<table class="ui compact celled table">
+
+</div>
+<div class="five wide column">
+
+    <table class="ui compact celled table" id="memory">
 	<thead>
-		<tr><th>Program</th></tr>
+		<tr><th colspan="2">Memory</th></tr>
 	</thead>
 	<tbody>
 			<tr>
 				<td>
-				<textarea class="editor lined">LDI R16,R1
-MOV R1,R2
-CLR R16
-CLR R2</textarea>
-				</td>
-			</tr>
-	</tbody>
-</table>
-	
-	</div>
-    <div class="column">
-<table class="ui compact celled table">
-	<thead>
-		<tr><th>Memory</th></tr>
-	</thead>
-	<tbody>
-			<tr>
-				<td>
-				<textarea class="editor">00   00   00   00   00   00   00   00
-00   00   00   00   00   00   00   00
-00   00   00   00   00   00   00   00
-00   00   00   00   00   00   00   00
-00   00   00   00   00   00   00   00
-00   00   00   00   00   00   00   00
+				<textarea class="editor lined" id="ui-ram">00 00 00 00 00 00 00 00
 
 
 </textarea>
@@ -117,11 +135,8 @@ CLR R2</textarea>
 			</tr>
 	</tbody>
 </table>
-	</div>
-  </div>
-  </div>
-
-
+</div>
+<div class="sixteen wide column">
 <table class="ui compact celled table teal">
   <thead>
     <tr>
@@ -132,48 +147,51 @@ CLR R2</textarea>
   <tbody>
     <tr>
 		<td class="positive">0-15</td>
-		<td>AA</td>
-		<td>AA</td>
-		<td>AA</td>
-		<td>AA</td>
-		<td>AA</td>
-		<td>AA</td>
-		<td>AA</td>
-		<td>AA</td>
+		<td id="ui-R0">AA</td>
+		<td id="ui-R1">AA</td>
+		<td id="ui-R2">AA</td>
+		<td id="ui-R3">AA</td>
+		<td id="ui-R4">AA</td>
+		<td id="ui-R5">AA</td>
+		<td id="ui-R6">AA</td>
+		<td id="ui-R7">AA</td>
 		
-		<td>AA</td>
-		<td>AA</td>
-		<td>AA</td>
-		<td>AA</td>
-		<td>AA</td>
-		<td>AA</td>
-		<td>AA</td>
-		<td>AA</td>
+		<td id="ui-R8">AA</td>
+		<td id="ui-R9">AA</td>
+		<td id="ui-R10">AA</td>
+		<td id="ui-R11">AA</td>
+		<td id="ui-R12">AA</td>
+		<td id="ui-R13">AA</td>
+		<td id="ui-R14">AA</td>
+		<td id="ui-R15">AA</td>
     </tr>
 	    <tr>
 		<td class="positive">16-32</td>
-		<td>AA</td>
-		<td>AA</td>
-		<td>AA</td>
-		<td>AA</td>
-		<td>AA</td>
-		<td>AA</td>
-		<td>AA</td>
-		<td>AA</td>
+		<td id="ui-R16">AA</td>
+		<td id="ui-R17">AA</td>
+		<td id="ui-R18">AA</td>
+		<td id="ui-R19">AA</td>
+		<td id="ui-R20">AA</td>
+		<td id="ui-R21">AA</td>
+		<td id="ui-R22">AA</td>
+		<td id="ui-R23">AA</td>
 		
-		<td>AA</td>
-		<td>AA</td>
-		<td>AA</td>
-		<td>AA</td>
-		<td>AA</td>
-		<td>AA</td>
-		<td>AA</td>
-		<td>AA</td>
+		<td id="ui-R24">AA</td>
+		<td id="ui-R25">AA</td>
+		<td id="ui-R26">AA</td>
+		<td id="ui-R27">AA</td>
+		<td id="ui-R28">AA</td>
+		<td id="ui-R29">AA</td>
+		<td id="ui-R30">AA</td>
+		<td id="ui-R31">AA</td>
     </tr>
 	</tbody>
 	</table>
 </div>
+</div>
 
+
+</div>
 <script>
 $(function() {
 	//$(".lined").colorfy();
@@ -182,12 +200,26 @@ $(function() {
 	);
 
 });
+			var observer = new MutationSummary({
+				rootNode: $("#ui-code-instructions")[0],
+				queries: [{ characterData: true }],
+				callback: function(summaries) {
+					updateCodeAddressLabels();
+				}
+			});	
+			
+
+// above doesnt catch enters or deletes
+/*$( "#ui-code-instructions").keypress( function (e){
+        if (e.keyCode == 13 | e.keyCode == 8){ 
+            console.log("enter pressed");
+            updateCodeAddressLabels();
+           }
+        }
+);*/
+
+setupProc();
+updateUIwithProcState();
 </script>
-<script>
-
-
-
-</script>
-
 </body>
 </html>
